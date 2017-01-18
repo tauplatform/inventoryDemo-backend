@@ -1,16 +1,7 @@
-require 'rubygems'
-require 'bundler/setup'
-require 'rhoconnect'
-require 'resque/tasks'
+#!/usr/bin/env rake
+# Add your own tasks in files placed in lib/tasks ending in .rake,
+# for example lib/tasks/capistrano.rake, and they will automatically be available to Rake.
 
-ROOT_PATH = File.expand_path(File.dirname(__FILE__))
+require File.expand_path('../config/application', __FILE__)
 
-task 'resque:setup' do
-  # The number of redis connections you want a job to have
-  Rhoconnect.connection_pool_size = 1
-  require 'rhoconnect/application/init'
-
-  Resque.after_fork do
-    Store.reconnect
-  end
-end
+Rhostore::Application.load_tasks

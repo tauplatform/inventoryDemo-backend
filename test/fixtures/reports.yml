@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  upc: 1234
+  productName: iPhone 5
+  damageReason: Damage during shipping
+  employeeId: 11
+  picture0Uri: 1.jpg
+  picture1Uri: 2.png
+  signatureUri: s.png
+
+two:
+  upc: 4321
+  productName: Samsung J1
+  damageReason: Manufacturing fauld
+  employeeId: 22
+  picture0Uri: 12.jpg
+  picture1Uri: 13.jpg
+  signatureUri: 14.jpg

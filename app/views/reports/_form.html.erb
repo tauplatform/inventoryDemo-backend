@@ -1,0 +1,45 @@
+<%= form_for(@report) do |f| %>
+    <% if @report.errors.any? %>
+        <div id="error_explanation">
+          <h2><%= pluralize(@report.errors.count, "error") %> prohibited this report from being saved:</h2>
+
+          <ul>
+            <% @report.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+            <% end %>
+          </ul>
+        </div>
+    <% end %>
+
+    <div class="field">
+      <%= f.label :upc %><br/>
+      <%= f.text_field :upc %>
+    </div>
+    <div class="field">
+      <%= f.label :productName %><br/>
+      <%= f.text_field :productName %>
+    </div>
+    <div class="field">
+      <%= f.label :damageReason %><br/>
+      <%= f.text_field :damageReason %>
+    </div>
+    <div class="field">
+      <%= f.label :employeeId %><br/>
+      <%= f.text_field :employeeId %>
+    </div>
+    <div class="field">
+      <%= f.label :picture0Uri %><br/>
+      <%= f.text_field :picture0Uri %>
+    </div>
+    <div class="field">
+      <%= f.label :picture1Uri %><br/>
+      <%= f.text_field :picture1Uri %>
+    </div>
+    <div class="field">
+      <%= f.label :signatureUri %><br/>
+      <%= f.text_field :signatureUri %>
+    </div>
+    <div class="actions">
+      <%= f.submit %>
+    </div>
+<% end %>
