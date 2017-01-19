@@ -1,0 +1,40 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>UPC:</b>
+  <%= @item.upc %>
+</p>
+
+<p>
+  <b>Product name:</b>
+  <%= @item.productName %>
+</p>
+
+<p>
+  <b>Quantity:</b>
+  <%= @item.quantity %>
+</p>
+
+<p>
+  <b>Employee ID:</b>
+  <%= @item.employeeId %>
+</p>
+
+<p>
+  <b>Picture 0 URI:</b>
+  <%= @item.picture0Uri %>
+</p>
+
+<p>
+  <b>Picture 1 URI:</b>
+  <%= @item.picture1Uri %>
+</p>
+
+<p>
+  <b>Signature URI:</b>
+  <%= @item.signatureUri %>
+</p>
+
+
+<%= link_to 'Edit', edit_inventory_item_path(@item) %> |
+<%= link_to 'Back', inventory_items_path %>

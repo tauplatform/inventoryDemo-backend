@@ -37,10 +37,9 @@ ActiveRecord::Schema.define(:version => 20170116144943) do
   end
 
 
-  create_table "reports", :force => true do |t|
+  create_table "inventory_items", :force => true do |t|
     t.string   "upc"
     t.string   "productName"
-    t.string   "damageReason"
     t.string   "employeeId"
     t.string   "picture0Uri"
     t.string   "picture1Uri"

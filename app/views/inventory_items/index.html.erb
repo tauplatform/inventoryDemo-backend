@@ -1,0 +1,35 @@
+<h1>Listing items</h1>
+
+<table>
+  <tr>
+    <th>UPC</th>
+    <th>Product</th>
+    <th>Damage reason</th>
+    <th>Employee Id</th>
+    <th>picture 0 Uri</th>
+    <th>picture 1 Uri</th>
+    <th>signature Uri</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @items.each do |item| %>
+  <tr>
+    <td><%= item.upc %></td>
+    <td><%= item.productName %></td>
+    <td><%= item.quantity %></td>
+    <td><%= item.employeeId %></td>
+    <td><%= item.picture0Uri %></td>
+    <td><%= item.picture1Uri %></td>
+    <td><%= item.signatureUri %></td>
+    <td><%= link_to 'Show', item %></td>
+    <td><%= link_to 'Edit', edit_inventory_item_path(item) %></td>
+    <td><%= link_to 'Destroy', item, method: :delete, data: {confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Report', new_inventory_item_path %>
