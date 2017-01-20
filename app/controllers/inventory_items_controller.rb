@@ -6,6 +6,8 @@ class InventoryItemsController < ApplicationController
       @items = InventoryItem.all(:offset => params['offset'].to_i, :limit => params['limit'].to_i)
     else
       @items = InventoryItem.all
+
+      put "items #{@items}"
     end
 
     respond_to do |format|
