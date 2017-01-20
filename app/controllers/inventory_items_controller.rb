@@ -18,9 +18,9 @@ class InventoryItemsController < ApplicationController
   end
 
   def show
-    puts "show item #{@item}"
-
     @item = InventoryItem.find(params[:id])
+
+    puts "show item #{@item}"
 
     respond_to do |format|
       format.html # show.html.erb
