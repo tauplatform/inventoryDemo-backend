@@ -7,7 +7,7 @@ class InventoryItemsController < ApplicationController
     else
       @items = InventoryItem.all
 
-      put "items #{@items}"
+      puts "items #{@items}"
     end
 
     respond_to do |format|
