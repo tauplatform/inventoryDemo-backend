@@ -44,7 +44,7 @@ class InventoryItemsController < ApplicationController
   end
 
   def create
-    @item = InventoryItem.new(params[:item])
+    @item = InventoryItem.new(params[:inventory_item])
 
     puts "create item #{@item}"
 
@@ -68,7 +68,7 @@ class InventoryItemsController < ApplicationController
     puts "edit item #{@item}"
 
     respond_to do |format|
-      if @item.update_attributes(params[:item])
+      if @item.update_attributes(params[:inventory_item])
         flash[:notice] = 'InventoryItem was successfully updated.'
         format.html { redirect_to(@item) }
         format.xml  { head :ok }
