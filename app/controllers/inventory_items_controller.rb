@@ -18,6 +18,8 @@ class InventoryItemsController < ApplicationController
   end
 
   def show
+    puts "show item #{@item}"
+
     @item = InventoryItem.find(params[:id])
 
     respond_to do |format|
@@ -44,6 +46,8 @@ class InventoryItemsController < ApplicationController
   def create
     @item = InventoryItem.new(params[:item])
 
+    puts "create item #{@item}"
+
     respond_to do |format|
       if @item.save
         flash[:notice] = 'InventoryItem was successfully created.'
@@ -60,6 +64,8 @@ class InventoryItemsController < ApplicationController
 
   def update
     @item = InventoryItem.find(params[:id])
+
+    puts "edit item #{@item}"
 
     respond_to do |format|
       if @item.update_attributes(params[:item])
