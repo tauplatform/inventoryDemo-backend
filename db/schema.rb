@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170119144943) do
+ActiveRecord::Schema.define(:version => 20170121144943) do
 
   create_table "customers", :force => true do |t|
     t.string   "first"
@@ -41,8 +41,7 @@ ActiveRecord::Schema.define(:version => 20170119144943) do
     t.string   "upc"
     t.string   "productName"
     t.string   "employeeId"
-    t.string   "picture0Uri"
-    t.string   "picture1Uri"
+    t.string   "photoUri"
     t.string   "signatureUri"
     t.string   "quantity"
     t.datetime "created_at", :null => false

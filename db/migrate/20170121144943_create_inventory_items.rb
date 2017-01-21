@@ -5,8 +5,7 @@ class CreateInventoryItems < ActiveRecord::Migration
       t.string :productName
       t.string :quantity
       t.string :employeeId
-      t.string :picture0Uri
-      t.string :picture1Uri
+      t.string :photoUri
       t.string :signatureUri
       t.timestamps
     end
