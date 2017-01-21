@@ -11,19 +11,13 @@ class UploadController < ApplicationController
   def create
     puts "params #{params}"
 
-    # extension = File.extname(params[:filename])
-    # filename = "#{SecureRandom.uuid}#{extension}"
-
-
     filename = params[:filename]
     dirname = File::join(Rails.public_path, 'images', 'upload')
     path = File::join(Rails.public_path, 'images', 'upload', filename)
 
-    puts "filename: #{path}"
     puts "filename: http://taustore.herokuapp.com/images/upload/#{filename}"
 
     unless File.directory?(dirname)
-      puts "uploading: create uploading directory #{dirname}"
       FileUtils.mkdir_p(dirname)
     end
 
