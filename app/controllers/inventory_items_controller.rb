@@ -4,7 +4,7 @@ class InventoryItemsController < ApplicationController
 
   def initialize
     s3 = Aws::S3::Resource.new(
-        credentials: Aws::Credentials.new(),
+        credentials: Aws::Credentials.new(ENV["AWS_ACCESS_KEY_ID"], ENV["AWS_SECRET_ACCESS_KEY"]),
         region: 'us-west-2'
     )
     @s3bucket = s3.bucket('inventory-demo')
