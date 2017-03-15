@@ -15,5 +15,4 @@
 //= require_tree .
 //= require tether
 //= require bootstrap
-//= dropzone
 
