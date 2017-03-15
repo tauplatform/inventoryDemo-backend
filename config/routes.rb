@@ -1,10 +1,5 @@
 Rhostore::Application.routes.draw do
   resources :inventory_items
-
-  resources :products
-
-  resources :customers
-
   resources :upload, defaults: {format: :json}
 
 

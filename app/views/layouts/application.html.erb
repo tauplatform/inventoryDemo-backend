@@ -1,15 +1,38 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Rhostore</title>
-  <%= stylesheet_link_tag    "application", :media => "all" %>
+  <title>Inventory Demo</title>
+  <%= stylesheet_link_tag "application", :media => "all" %>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
 </head>
 <body>
-<h3><em>Note:  This is a test server.  The database is reset every hour.</em></h3>
+<div class="container">
+  <nav class="navbar navbar-toggleable-md navbar-light bg-faded">
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <a class="navbar-brand" href="#">
+      <img src="<%= image_path("logo.png") %>" width="30" height="30" alt="">
+    </a>
+    <a class="navbar-brand" href="#">Inventory Demo</a>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="/inventory_items">Items <span class="sr-only">(current)</span></a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+</div>
 
-<%= yield %>
-
+<div class="container">
+  <div class="alert alert-warning my-3" role="alert">
+    <strong>Attention!</strong>This is a test server. The database is reset every hour.
+  </div>
+</div>
+<div class="container">
+  <%= yield %>
+</div>
 </body>
 </html>

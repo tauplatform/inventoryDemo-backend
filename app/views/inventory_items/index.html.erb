@@ -1,33 +1,65 @@
-<h1>Listing items</h1>
+<%= link_to 'New Item', new_inventory_item_path, {class: 'btn btn-primary my-3'} %>
 
-<table>
-  <tr>
-    <th>UPC</th>
-    <th>Product</th>
-    <th>Quantity</th>
-    <th>Employee Id</th>
-    <th>Photo Uri</th>
-    <th>Signature Uri</th>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
+<div class="container">
+  <div class="card-deck">
 
-<% @items.each do |item| %>
-  <tr>
-    <td><%= item.upc %></td>
-    <td><%= item.productName %></td>
-    <td><%= item.quantity %></td>
-    <td><%= item.employeeId %></td>
-    <td><%= item.photoUri %></td>
-    <td><%= item.signatureUri %></td>
-    <td><%= link_to 'Show', item %></td>
-    <td><%= link_to 'Edit', edit_inventory_item_path(item) %></td>
-    <td><%= link_to 'Destroy', item, method: :delete, data: {confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
+    <% count = 1 %>
+    <% @items.each do |item| %>
+        <% if count == 1 %>
+            <div class="row mb-3">
+        <% end %>
+        <div class="card">
+          <img class="card-img-top" src="<%= item.photoUri %>" alt="<%= item.productName %>" style="width:100%; height:auto">
+          <div class="card-block">
+            <div><h4 class="card-title"><%= item.productName %></h4></div>
+            <h6 class="card-subtitle mb-2 text-muted"><%= item.upc %></h6>
+          </div>
+          <div class="card-footer">
+            <%= link_to 'Show', item, {class: 'btn btn-sm btn-outline-info', style: 'width: 30%'} %>
+            <%= link_to 'Edit', edit_inventory_item_path(item), {class: 'btn btn-sm btn-outline-primary', style: 'width: 30%'} %>
+            <button type="button" class="btn btn-sm btn-outline-danger" data-toggle="modal" data-product-id="<%= item.id %>" data-product-name="<%= item.productName %>" data-target="#deleteItemDialog" style="width: 30%">
+              Delete
+            </button>
+          </div>
 
-<br />
+        </div>
+        <% if count == 3 %>
+            </div>
+            <% count = 1 %>
+        <% else %>
+            <% count = count + 1 %>
+        <% end %>
 
-<%= link_to 'New Item', new_inventory_item_path %>
+    <% end %>
+  </div>
+</div>
+
+
+<div class="modal fade" id="deleteItemDialog" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Are you sure?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+        <a href="" data-method="delete" class="btn btn-danger" rel="nofollow">Delete</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    $('#deleteItemDialog').on('show.bs.modal', function (event) {
+        var itemId = $(event.relatedTarget).data('product-id');
+        console.log(itemId)
+        var itemName = $(event.relatedTarget).data('product-name');
+        $(this).find('.modal-footer .btn-danger').attr("href", "/inventory_items/" + itemId);
+        $(this).find('.modal-body').text("Delete item \"" + itemName + "\"?");
+    });
+</script>

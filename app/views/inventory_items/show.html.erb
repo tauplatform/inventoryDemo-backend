@@ -1,35 +1,35 @@
-<p id="notice"><%= notice %></p>
-
-<p>
-  <b>UPC:</b>
-  <%= @item.upc %>
-</p>
-
-<p>
-  <b>Product name:</b>
-  <%= @item.productName %>
-</p>
-
-<p>
-  <b>Quantity:</b>
-  <%= @item.quantity %>
-</p>
-
-<p>
-  <b>Employee ID:</b>
-  <%= @item.employeeId %>
-</p>
-
-<p>
-  <b>Photo URI:</b>
-  <%= @item.photoUri %>
-</p>
-
-<p>
-  <b>Signature URI:</b>
-  <%= @item.signatureUri %>
-</p>
+<div class="row my-3">
+  <div class="col-md-2"><%= link_to 'Back', inventory_items_path, {class: 'btn btn-secondary'} %></div>
+  <div class="col-md-8">
+    <h4 class="text-center"><%= @item.productName %></h4>
+  </div>
+  <div class="col-md-2 text-right"> <%= link_to 'Edit', edit_inventory_item_path(@item), {class: 'btn btn-primary'} %></div>
+</div>
 
 
-<%= link_to 'Edit', edit_inventory_item_path(@item) %> |
-<%= link_to 'Back', inventory_items_path %>
+<ul class="list-group">
+  <li class="list-group-item">
+    <div class="col-2"><strong>Product name:</strong></div>
+    <div class="col-2"><%= @item.productName %></div>
+  </li>
+  <li class="list-group-item">
+    <div class="col-2"><strong>UPC:</strong></div>
+    <div class="col-2"><%= @item.upc %></div>
+  </li>
+  <li class="list-group-item">
+    <div class="col-2"><strong>Quantity:</strong></div>
+    <div class="col-2"><%= @item.quantity %></div>
+  </li>
+  <li class="list-group-item">
+    <div class="col-2"><strong>Employee ID:</strong></div>
+    <div class="col-2"><%= @item.employeeId %></div>
+  </li>
+  <li class="list-group-item">
+    <div class="col-2"><strong>Photo:</strong></div>
+    <div class="col-4"><img src="<%= @item.photoUri %>" style="width:100%; height:auto"></div>
+  </li>
+  <li class="list-group-item">
+    <div class="col-2"><strong>Signature:</strong></div>
+    <div class="col-4"><img src="<%= @item.signatureUri %>" style="width:100%; height:auto"></div>
+  </li>
+</ul>

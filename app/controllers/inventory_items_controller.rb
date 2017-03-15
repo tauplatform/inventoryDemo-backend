@@ -1,4 +1,14 @@
+require 'aws-sdk'
+
 class InventoryItemsController < ApplicationController
+
+  def initialize
+    s3 = Aws::S3::Resource.new(
+        credentials: Aws::Credentials.new(),
+        region: 'us-west-2'
+    )
+    @s3bucket = s3.bucket('inventory-demo')
+  end
 
   def index
     # we implement limit and offset
@@ -44,20 +54,36 @@ class InventoryItemsController < ApplicationController
   end
 
   def create
+    uploaded_io = params[:inventory_item][:photoUri]
+    File.open(Rails.root.join('public', 'uploads', uploaded_io.original_filename), 'wb') do |file|
+      file.write(uploaded_io.read)
+      extension = File.extname(uploaded_io.original_filenam)
+      key = "#{SecureRandom.uuid}#{extension}"
+      obj = @s3bucket.object(key)
+      obj.upload_file(Rails.root.join('public', 'uploads', uploaded_io.original_filename), {:acl => 'public-read'})
+      params[:inventory_item][:photoUri] = object.public_url.gsub("https://", "http://")
+    end
+
+    uploaded_io = params[:inventory_item][:signatureUri]
+    File.open(Rails.root.join('public', 'uploads', uploaded_io.original_filename), 'wb') do |file|
+      file.write(uploaded_io.read)
+      extension = File.extname(uploaded_io.original_filenam)
+      key = "#{SecureRandom.uuid}#{extension}"
+      obj = @s3bucket.object(key)
+      obj.upload_file(Rails.root.join('public', 'uploads', uploaded_io.original_filename))
+      params[:inventory_item][:signatureUri] = obj.public_url
+    end
     @item = InventoryItem.new(params[:inventory_item])
-
-    puts "create item #{@item}"
-
     respond_to do |format|
       if @item.save
         flash[:notice] = 'InventoryItem was successfully created.'
         format.html { redirect_to(@item) }
-        format.xml  { render :xml => @item, :status => :created, :location => @item }
-        format.json  { render :json => @item, :status => :created, :location => @item }
+        format.xml { render :xml => @item, :status => :created, :location => @item }
+        format.json { render :json => @item, :status => :created, :location => @item }
       else
         format.html { render :action => "new" }
-        format.json  { render :json => @item.errors, :status => :unprocessable_entity }
-        format.xml  { render :xml => @item.errors, :status => :unprocessable_entity }
+        format.json { render :json => @item.errors, :status => :unprocessable_entity }
+        format.xml { render :xml => @item.errors, :status => :unprocessable_entity }
       end
     end
   end
@@ -65,18 +91,37 @@ class InventoryItemsController < ApplicationController
   def update
     @item = InventoryItem.find(params[:id])
 
-    puts "edit item #{@item}"
+    uploaded_io = params[:inventory_item][:photoUri]
+    File.open(Rails.root.join('public', 'uploads', uploaded_io.original_filename), 'wb') do |file|
+      file.write(uploaded_io.read)
+      extension = File.extname(uploaded_io.original_filenam)
+      key = "#{SecureRandom.uuid}#{extension}"
+      obj = @s3bucket.object(key)
+      obj.upload_file(Rails.root.join('public', 'uploads', uploaded_io.original_filename), {:acl => 'public-read'})
+      params[:inventory_item][:photoUri] = object.public_url.gsub("https://", "http://")
+    end
+
+    uploaded_io = params[:inventory_item][:signatureUri]
+    File.open(Rails.root.join('public', 'uploads', uploaded_io.original_filename), 'wb') do |file|
+      file.write(uploaded_io.read)
+      extension = File.extname(uploaded_io.original_filenam)
+      key = "#{SecureRandom.uuid}#{extension}"
+      obj = @s3bucket.object(key)
+      obj.upload_file(Rails.root.join('public', 'uploads', uploaded_io.original_filename))
+      params[:inventory_item][:signatureUri] = obj.public_url
+    end
+
 
     respond_to do |format|
       if @item.update_attributes(params[:inventory_item])
         flash[:notice] = 'InventoryItem was successfully updated.'
         format.html { redirect_to(@item) }
-        format.xml  { head :ok }
-        format.json  { head :ok }
+        format.xml { head :ok }
+        format.json { head :ok }
       else
         format.html { render :action => "edit" }
-        format.xml  { render :xml => @item.errors, :status => :unprocessable_entity }
-        format.json  { render :json => @item.errors, :status => :unprocessable_entity }
+        format.xml { render :xml => @item.errors, :status => :unprocessable_entity }
+        format.json { render :json => @item.errors, :status => :unprocessable_entity }
       end
     end
   end
@@ -87,8 +132,8 @@ class InventoryItemsController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to(inventory_items_url) }
-      format.xml  { head :ok }
-      format.json  { head :ok }
+      format.xml { head :ok }
+      format.json { head :ok }
     end
   end
 
