@@ -17,7 +17,6 @@ class InventoryItemsController < ApplicationController
     else
       @inventory_items = InventoryItem.all
     end
-
     respond_to do |format|
       format.html # index.html.erb
       format.json { render :json => @items }
@@ -36,7 +35,6 @@ class InventoryItemsController < ApplicationController
 
   def new
     @inventory_item = InventoryItem.new
-
     respond_to do |format|
       format.html # new.html.erb
       format.json { render :json => @inventory_item }
@@ -48,33 +46,38 @@ class InventoryItemsController < ApplicationController
     @inventory_item = InventoryItem.find(params[:id])
   end
 
+  def uploadFileToS3(aFile)
+    extension = File.extname(aFile.original_filename)
+    key = "#{SecureRandom.uuid}#{extension}"
+    File.open(Rails.root.join('public', 'uploads', key), 'wb') do |file|
+      file.write(aFile.read)
+      obj = @s3bucket.object(key)
+      obj.upload_file(Rails.root.join('public', 'uploads', key), {:acl => 'public-read'})
+      File.delete(Rails.root.join('public', 'uploads', key))
+      return obj.public_url.gsub("https://", "http://")
+    end
+  end
+
   def create
     attrs = Hash.new
-    attrs['productName'] = params[:inventory_item]['productName']
-    attrs['upc'] = params[:inventory_item]['upc']
-    attrs['quantity'] = params[:inventory_item]['quantity']
-    attrs['employeeId'] = params[:inventory_item]['employeeId']
-
-    uploaded_io = params[:inventory_item][:photoUri]
-    File.open(Rails.root.join('public', 'uploads', uploaded_io.original_filename), 'wb') do |file|
-      file.write(uploaded_io.read)
-      extension = File.extname(uploaded_io.original_filename)
-      key = "#{SecureRandom.uuid}#{extension}"
-      obj = @s3bucket.object(key)
-      obj.upload_file(Rails.root.join('public', 'uploads', uploaded_io.original_filename), {:acl => 'public-read'})
-      attrs[:photoUri] = obj.public_url.gsub("https://", "http://")
+    attrs[:productName] = params[:inventory_item]['productName']
+    attrs[:upc] = params[:inventory_item]['upc']
+    attrs[:quantity] = params[:inventory_item]['quantity']
+    attrs[:employeeId] = params[:inventory_item]['employeeId']
+    if params[:inventory_item][:photoUri].class == ActionDispatch::Http::UploadedFile
+      puts "params[:inventory_item][:photoUri] is ActionDispatch::Http::UploadedFile"
+      attrs[:photoUri] = uploadFileToS3(params[:inventory_item][:photoUri])
+    elsif params[:inventory_item]['photoUri'] != nil
+      puts "params[:inventory_item][:photoUri] is not nil"
+      attrs[:photoUri] = params[:inventory_item]['photoUri']
     end
-
-    uploaded_io = params[:inventory_item][:signatureUri]
-    File.open(Rails.root.join('public', 'uploads', uploaded_io.original_filename), 'wb') do |file|
-      file.write(uploaded_io.read)
-      extension = File.extname(uploaded_io.original_filename)
-      key = "#{SecureRandom.uuid}#{extension}"
-      obj = @s3bucket.object(key)
-      obj.upload_file(Rails.root.join('public', 'uploads', uploaded_io.original_filename))
-      attrs[:signatureUri] = obj.public_url
+    if params[:inventory_item][:signatureUri].class == ActionDispatch::Http::UploadedFile
+      puts "params[:inventory_item][:signatureUri] is ActionDispatch::Http::UploadedFile"
+      attrs[:signatureUri] = uploadFileToS3(params[:inventory_item][:signatureUri])
+    elsif params[:inventory_item]['signatureUri'] != nil
+      puts "params[:inventory_item][:signatureUri] is not nil"
+      attrs[:signatureUri] = params[:inventory_item]['signatureUri']
     end
-
     @inventory_item = InventoryItem.new(attrs)
     respond_to do |format|
       if @inventory_item.save
@@ -92,34 +95,25 @@ class InventoryItemsController < ApplicationController
 
   def update
     @inventory_item = InventoryItem.find(params[:id])
-
     attrs = Hash.new
-    attrs['productName'] = params[:inventory_item]['productName']
-    attrs['upc'] = params[:inventory_item]['upc']
-    attrs['quantity'] = params[:inventory_item]['quantity']
-    attrs['employeeId'] = params[:inventory_item]['employeeId']
-
-    uploaded_io = params[:inventory_item][:photoUri]
-    File.open(Rails.root.join('public', 'uploads', uploaded_io.original_filename), 'wb') do |file|
-      file.write(uploaded_io.read)
-      extension = File.extname(uploaded_io.original_filename)
-      key = "#{SecureRandom.uuid}#{extension}"
-      obj = @s3bucket.object(key)
-      obj.upload_file(Rails.root.join('public', 'uploads', uploaded_io.original_filename), {:acl => 'public-read'})
-      attrs[:photoUri] = obj.public_url.gsub("https://", "http://")
+    attrs[:productName] = params[:inventory_item]['productName']
+    attrs[:upc] = params[:inventory_item]['upc']
+    attrs[:quantity] = params[:inventory_item]['quantity']
+    attrs[:employeeId] = params[:inventory_item]['employeeId']
+    if params[:inventory_item][:photoUri].class == ActionDispatch::Http::UploadedFile
+      puts "params[:inventory_item][:photoUri] is ActionDispatch::Http::UploadedFile"
+      attrs[:photoUri] = uploadFileToS3(params[:inventory_item][:photoUri])
+    elsif params[:inventory_item]['photoUri'] != nil
+      puts "params[:inventory_item][:photoUri] is not nil"
+      attrs[:photoUri] = params[:inventory_item]['photoUri']
     end
-
-    uploaded_io = params[:inventory_item][:signatureUri]
-    File.open(Rails.root.join('public', 'uploads', uploaded_io.original_filename), 'wb') do |file|
-      file.write(uploaded_io.read)
-      extension = File.extname(uploaded_io.original_filename)
-      key = "#{SecureRandom.uuid}#{extension}"
-      obj = @s3bucket.object(key)
-      obj.upload_file(Rails.root.join('public', 'uploads', uploaded_io.original_filename))
-      attrs[:signatureUri] = obj.public_url
+    if params[:inventory_item][:signatureUri].class == ActionDispatch::Http::UploadedFile
+      puts "params[:inventory_item][:signatureUri] is ActionDispatch::Http::UploadedFile"
+      attrs[:signatureUri] = uploadFileToS3(params[:inventory_item][:signatureUri])
+    elsif params[:inventory_item]['signatureUri'] != nil
+      puts "params[:inventory_item][:signatureUri] is not nil"
+      attrs[:signatureUri] = params[:inventory_item]['signatureUri']
     end
-
-
     respond_to do |format|
       if @inventory_item.update_attributes(attrs)
         flash[:notice] = 'InventoryItem was successfully updated.'
@@ -151,13 +145,13 @@ class InventoryItemsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_inventory_item
-      @inventory_item = InventoryItem.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_inventory_item
+    @inventory_item = InventoryItem.find(params[:id])
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def inventory_item_params
-      params.require(:inventory_item).permit(:upc, :productName, :quantity, :employeeId, :photoUri, :signatureUri)
-    end
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def inventory_item_params
+    params.require(:inventory_item).permit(:upc, :productName, :quantity, :employeeId, :photoUri, :signatureUri)
+  end
 end
