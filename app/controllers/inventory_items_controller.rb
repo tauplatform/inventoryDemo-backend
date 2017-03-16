@@ -1,8 +1,8 @@
-require 'aws-sdk'
-
 class InventoryItemsController < ApplicationController
+  before_action :set_inventory_item, only: [:show, :edit, :update, :destroy]
 
-  def after_initialize
+  def initialize
+    super
     s3 = Aws::S3::Resource.new(
         credentials: Aws::Credentials.new(ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY']),
         region: ENV['AWS_REGION']
@@ -13,11 +13,9 @@ class InventoryItemsController < ApplicationController
   def index
     # we implement limit and offset
     if params['offset'] && params['limit']
-      @items = InventoryItem.all(:offset => params['offset'].to_i, :limit => params['limit'].to_i)
+      @inventory_items = InventoryItem.all(:offset => params['offset'].to_i, :limit => params['limit'].to_i)
     else
-      @items = InventoryItem.all
-
-      puts "items #{@items}"
+      @inventory_items = InventoryItem.all
     end
 
     respond_to do |format|
@@ -28,107 +26,117 @@ class InventoryItemsController < ApplicationController
   end
 
   def show
-    @item = InventoryItem.find(params[:id])
-
-    puts "show item #{@item}"
-
+    @inventory_item = InventoryItem.find(params[:id])
     respond_to do |format|
       format.html # show.html.erb
-      format.json { render :json => @item }
-      format.xml { render :xml => @item }
+      format.json { render :json => @inventory_item }
+      format.xml { render :xml => @inventory_item }
     end
   end
 
   def new
-    @item = InventoryItem.new
+    @inventory_item = InventoryItem.new
 
     respond_to do |format|
       format.html # new.html.erb
-      format.json { render :json => @item }
-      format.xml { render :xml => @item }
+      format.json { render :json => @inventory_item }
+      format.xml { render :xml => @inventory_item }
     end
   end
 
   def edit
-    @item = InventoryItem.find(params[:id])
+    @inventory_item = InventoryItem.find(params[:id])
   end
 
   def create
+    attrs = Hash.new
+    attrs['productName'] = params[:inventory_item]['productName']
+    attrs['upc'] = params[:inventory_item]['upc']
+    attrs['quantity'] = params[:inventory_item]['quantity']
+    attrs['employeeId'] = params[:inventory_item]['employeeId']
+
     uploaded_io = params[:inventory_item][:photoUri]
     File.open(Rails.root.join('public', 'uploads', uploaded_io.original_filename), 'wb') do |file|
       file.write(uploaded_io.read)
-      extension = File.extname(uploaded_io.original_filenam)
+      extension = File.extname(uploaded_io.original_filename)
       key = "#{SecureRandom.uuid}#{extension}"
       obj = @s3bucket.object(key)
       obj.upload_file(Rails.root.join('public', 'uploads', uploaded_io.original_filename), {:acl => 'public-read'})
-      params[:inventory_item][:photoUri] = object.public_url.gsub("https://", "http://")
+      attrs[:photoUri] = obj.public_url.gsub("https://", "http://")
     end
 
     uploaded_io = params[:inventory_item][:signatureUri]
     File.open(Rails.root.join('public', 'uploads', uploaded_io.original_filename), 'wb') do |file|
       file.write(uploaded_io.read)
-      extension = File.extname(uploaded_io.original_filenam)
+      extension = File.extname(uploaded_io.original_filename)
       key = "#{SecureRandom.uuid}#{extension}"
       obj = @s3bucket.object(key)
       obj.upload_file(Rails.root.join('public', 'uploads', uploaded_io.original_filename))
-      params[:inventory_item][:signatureUri] = obj.public_url
+      attrs[:signatureUri] = obj.public_url
     end
-    @item = InventoryItem.new(params[:inventory_item])
+
+    @inventory_item = InventoryItem.new(attrs)
     respond_to do |format|
-      if @item.save
+      if @inventory_item.save
         flash[:notice] = 'InventoryItem was successfully created.'
-        format.html { redirect_to(@item) }
-        format.xml { render :xml => @item, :status => :created, :location => @item }
-        format.json { render :json => @item, :status => :created, :location => @item }
+        format.html { redirect_to(@inventory_item) }
+        format.xml { render :xml => @inventory_item, :status => :created, :location => @inventory_item }
+        format.json { render :json => @inventory_item, :status => :created, :location => @inventory_item }
       else
         format.html { render :action => "new" }
-        format.json { render :json => @item.errors, :status => :unprocessable_entity }
-        format.xml { render :xml => @item.errors, :status => :unprocessable_entity }
+        format.json { render :json => @inventory_item.errors, :status => :unprocessable_entity }
+        format.xml { render :xml => @inventory_item.errors, :status => :unprocessable_entity }
       end
     end
   end
 
   def update
-    @item = InventoryItem.find(params[:id])
+    @inventory_item = InventoryItem.find(params[:id])
+
+    attrs = Hash.new
+    attrs['productName'] = params[:inventory_item]['productName']
+    attrs['upc'] = params[:inventory_item]['upc']
+    attrs['quantity'] = params[:inventory_item]['quantity']
+    attrs['employeeId'] = params[:inventory_item]['employeeId']
 
     uploaded_io = params[:inventory_item][:photoUri]
     File.open(Rails.root.join('public', 'uploads', uploaded_io.original_filename), 'wb') do |file|
       file.write(uploaded_io.read)
-      extension = File.extname(uploaded_io.original_filenam)
+      extension = File.extname(uploaded_io.original_filename)
       key = "#{SecureRandom.uuid}#{extension}"
       obj = @s3bucket.object(key)
       obj.upload_file(Rails.root.join('public', 'uploads', uploaded_io.original_filename), {:acl => 'public-read'})
-      params[:inventory_item][:photoUri] = object.public_url.gsub("https://", "http://")
+      attrs[:photoUri] = obj.public_url.gsub("https://", "http://")
     end
 
     uploaded_io = params[:inventory_item][:signatureUri]
     File.open(Rails.root.join('public', 'uploads', uploaded_io.original_filename), 'wb') do |file|
       file.write(uploaded_io.read)
-      extension = File.extname(uploaded_io.original_filenam)
+      extension = File.extname(uploaded_io.original_filename)
       key = "#{SecureRandom.uuid}#{extension}"
       obj = @s3bucket.object(key)
       obj.upload_file(Rails.root.join('public', 'uploads', uploaded_io.original_filename))
-      params[:inventory_item][:signatureUri] = obj.public_url
+      attrs[:signatureUri] = obj.public_url
     end
 
 
     respond_to do |format|
-      if @item.update_attributes(params[:inventory_item])
+      if @inventory_item.update_attributes(attrs)
         flash[:notice] = 'InventoryItem was successfully updated.'
-        format.html { redirect_to(@item) }
+        format.html { redirect_to(@inventory_item) }
         format.xml { head :ok }
         format.json { head :ok }
       else
         format.html { render :action => "edit" }
-        format.xml { render :xml => @item.errors, :status => :unprocessable_entity }
-        format.json { render :json => @item.errors, :status => :unprocessable_entity }
+        format.xml { render :xml => @inventory_item.errors, :status => :unprocessable_entity }
+        format.json { render :json => @inventory_item.errors, :status => :unprocessable_entity }
       end
     end
   end
 
   def destroy
-    @item = InventoryItem.find(params[:id])
-    @item.destroy
+    @inventory_item = InventoryItem.find(params[:id])
+    @inventory_item.destroy
 
     respond_to do |format|
       format.html { redirect_to(inventory_items_url) }
@@ -141,4 +149,15 @@ class InventoryItemsController < ApplicationController
     InventoryItem.destroy_all
     redirect_to(reports_url)
   end
+
+  private
+    # Use callbacks to share common setup or constraints between actions.
+    def set_inventory_item
+      @inventory_item = InventoryItem.find(params[:id])
+    end
+
+    # Never trust parameters from the scary internet, only allow the white list through.
+    def inventory_item_params
+      params.require(:inventory_item).permit(:upc, :productName, :quantity, :employeeId, :photoUri, :signatureUri)
+    end
 end

@@ -1,3 +1,2 @@
-class InventoryItem < ActiveRecord::Base
-  attr_accessible :upc, :productName, :quantity, :employeeId, :photoUri, :signatureUri
+class InventoryItem < ApplicationRecord
 end

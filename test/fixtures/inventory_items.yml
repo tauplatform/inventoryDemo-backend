@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  upc: MyString
+  productName: MyString
+  quantity: 1
+  employeeId: MyString
+  photoUri: MyString
+  signatureUri: MyString
+
+two:
+  upc: MyString
+  productName: MyString
+  quantity: 1
+  employeeId: MyString
+  photoUri: MyString
+  signatureUri: MyString

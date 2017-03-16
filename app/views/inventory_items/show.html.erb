@@ -1,35 +1,37 @@
+<p id="notice"><%= notice %></p>
+
 <div class="row my-3">
   <div class="col-md-2"><%= link_to 'Back', inventory_items_path, {class: 'btn btn-secondary'} %></div>
   <div class="col-md-8">
-    <h4 class="text-center"><%= @item.productName %></h4>
+    <h4 class="text-center"><%= @inventory_item.productName %></h4>
   </div>
-  <div class="col-md-2 text-right"> <%= link_to 'Edit', edit_inventory_item_path(@item), {class: 'btn btn-primary'} %></div>
+  <div class="col-md-2 text-right"> <%= link_to 'Edit', edit_inventory_item_path(@inventory_item), {class: 'btn btn-primary'} %></div>
 </div>
 
 
 <ul class="list-group">
   <li class="list-group-item">
     <div class="col-2"><strong>Product name:</strong></div>
-    <div class="col-2"><%= @item.productName %></div>
+    <div class="col-2"><%= @inventory_item.productName %></div>
   </li>
   <li class="list-group-item">
     <div class="col-2"><strong>UPC:</strong></div>
-    <div class="col-2"><%= @item.upc %></div>
+    <div class="col-2"><%= @inventory_item.upc %></div>
   </li>
   <li class="list-group-item">
     <div class="col-2"><strong>Quantity:</strong></div>
-    <div class="col-2"><%= @item.quantity %></div>
+    <div class="col-2"><%= @inventory_item.quantity %></div>
   </li>
   <li class="list-group-item">
     <div class="col-2"><strong>Employee ID:</strong></div>
-    <div class="col-2"><%= @item.employeeId %></div>
+    <div class="col-2"><%= @inventory_item.employeeId %></div>
   </li>
   <li class="list-group-item">
     <div class="col-2"><strong>Photo:</strong></div>
-    <div class="col-4"><img src="<%= @item.photoUri %>" style="width:100%; height:auto"></div>
+    <div class="col-4"><img src="<%= @inventory_item.photoUri %>" style="width:100%; height:auto"></div>
   </li>
   <li class="list-group-item">
     <div class="col-2"><strong>Signature:</strong></div>
-    <div class="col-4"><img src="<%= @item.signatureUri %>" style="width:100%; height:auto"></div>
+    <div class="col-4"><img src="<%= @inventory_item.signatureUri %>" style="width:100%; height:auto"></div>
   </li>
 </ul>
