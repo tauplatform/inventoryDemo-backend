@@ -1,24 +1,8 @@
-# README
+# inventoryDemo-backend
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+inventoryDemo-backend is one from a bunch of three applications:
+*  InventoryDemo-mobileApp
+*  InventoryDemo-rhoconnect-server
+*  InventoryDemo-backend
 
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+The InventoryDemo-backend is simple ROR apllication that stores data.
