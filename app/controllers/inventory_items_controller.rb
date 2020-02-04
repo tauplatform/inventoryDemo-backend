@@ -1,5 +1,6 @@
 class InventoryItemsController < ApplicationController
   before_action :set_inventory_item, only: [:show, :edit, :update, :destroy]
+  protect_from_forgery unless: -> { request.format.json? }
 
   def initialize
     super
@@ -12,10 +13,11 @@ class InventoryItemsController < ApplicationController
 
   def index
     # we implement limit and offset
+    username_condition = params['username'] != nil ? {:username => params['username']} : {}
     if params['offset'] && params['limit']
-      @inventory_items = InventoryItem.all(:offset => params['offset'].to_i, :limit => params['limit'].to_i)
+      @inventory_items = InventoryItem.where(username_condition).offset(params['offset'].to_i).limit(params['limit'].to_i)
     else
-      @inventory_items = InventoryItem.all
+      @inventory_items = InventoryItem.where(username_condition)
     end
     respond_to do |format|
       format.html # index.html.erb
@@ -64,20 +66,20 @@ class InventoryItemsController < ApplicationController
     attrs[:upc] = params[:inventory_item]['upc']
     attrs[:quantity] = params[:inventory_item]['quantity']
     attrs[:employeeId] = params[:inventory_item]['employeeId']
+    attrs[:username] = params[:inventory_item]['username']
+
     if params[:inventory_item][:photoUri].class == ActionDispatch::Http::UploadedFile
-      puts "params[:inventory_item][:photoUri] is ActionDispatch::Http::UploadedFile"
       attrs[:photoUri] = uploadFileToS3(params[:inventory_item][:photoUri])
     elsif params[:inventory_item]['photoUri'] != nil
-      puts "params[:inventory_item][:photoUri] is not nil"
       attrs[:photoUri] = params[:inventory_item]['photoUri']
     end
+
     if params[:inventory_item][:signatureUri].class == ActionDispatch::Http::UploadedFile
-      puts "params[:inventory_item][:signatureUri] is ActionDispatch::Http::UploadedFile"
       attrs[:signatureUri] = uploadFileToS3(params[:inventory_item][:signatureUri])
     elsif params[:inventory_item]['signatureUri'] != nil
-      puts "params[:inventory_item][:signatureUri] is not nil"
       attrs[:signatureUri] = params[:inventory_item]['signatureUri']
     end
+
     @inventory_item = InventoryItem.new(attrs)
     respond_to do |format|
       if @inventory_item.save
@@ -100,18 +102,17 @@ class InventoryItemsController < ApplicationController
     attrs[:upc] = params[:inventory_item]['upc']
     attrs[:quantity] = params[:inventory_item]['quantity']
     attrs[:employeeId] = params[:inventory_item]['employeeId']
+    attrs[:username] = params[:inventory_item]['username']
+
     if params[:inventory_item][:photoUri].class == ActionDispatch::Http::UploadedFile
-      puts "params[:inventory_item][:photoUri] is ActionDispatch::Http::UploadedFile"
       attrs[:photoUri] = uploadFileToS3(params[:inventory_item][:photoUri])
     elsif params[:inventory_item]['photoUri'] != nil
-      puts "params[:inventory_item][:photoUri] is not nil"
       attrs[:photoUri] = params[:inventory_item]['photoUri']
     end
+
     if params[:inventory_item][:signatureUri].class == ActionDispatch::Http::UploadedFile
-      puts "params[:inventory_item][:signatureUri] is ActionDispatch::Http::UploadedFile"
       attrs[:signatureUri] = uploadFileToS3(params[:inventory_item][:signatureUri])
     elsif params[:inventory_item]['signatureUri'] != nil
-      puts "params[:inventory_item][:signatureUri] is not nil"
       attrs[:signatureUri] = params[:inventory_item]['signatureUri']
     end
     respond_to do |format|
@@ -152,6 +153,6 @@ class InventoryItemsController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def inventory_item_params
-    params.require(:inventory_item).permit(:upc, :productName, :quantity, :employeeId, :photoUri, :signatureUri)
+    params.require(:inventory_item).permit(:upc, :productName, :quantity, :employeeId, :username, :photoUri, :signatureUri)
   end
 end

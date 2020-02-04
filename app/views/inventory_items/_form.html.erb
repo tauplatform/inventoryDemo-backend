@@ -4,67 +4,74 @@
       <h2><%= pluralize(@inventory_item.errors.count, "error") %> prohibited this inventory_item from being saved:</h2>
 
       <ul>
-      <% @inventory_item.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
+        <% @inventory_item.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
       </ul>
     </div>
   <% end %>
 
-    <div class="form-group row">
-      <%= f.label :productName, {class: 'col-2 col-form-label'} %>
-      <div class="col-10">
-        <%= f.text_field :productName, {class: 'form-control'} %>
-      </div>
+  <div class="form-group row">
+    <%= f.label :user_name, {class: 'col-2 col-form-label'} %>
+    <div class="col-10">
+      <%= f.text_field :username, {class: 'form-control'} %>
     </div>
+  </div>
 
-    <div class="form-group row">
-      <%= f.label :upc, {class: 'col-2 col-form-label'} %>
-      <div class="col-10">
-        <%= f.number_field :upc, {class: 'form-control'} %>
-      </div>
+  <div class="form-group row">
+    <%= f.label :product_name, {class: 'col-2 col-form-label'} %>
+    <div class="col-10">
+      <%= f.text_field :productName, {class: 'form-control'} %>
     </div>
+  </div>
 
-    <div class="form-group row">
-      <%= f.label :quantity, {class: 'col-2 col-form-label'} %>
-      <div class="col-10">
-        <%= f.number_field :quantity, {class: 'form-control'} %>
-      </div>
+  <div class="form-group row">
+    <%= f.label :upc, {class: 'col-2 col-form-label'} %>
+    <div class="col-10">
+      <%= f.number_field :upc, {class: 'form-control'} %>
     </div>
+  </div>
 
-    <div class="form-group row">
-      <%= f.label :employeeId, {class: 'col-2 col-form-label'} %>
-      <div class="col-10">
-        <%= f.text_field :employeeId, {class: 'form-control'} %>
-      </div>
+  <div class="form-group row">
+    <%= f.label :quantity, {class: 'col-2 col-form-label'} %>
+    <div class="col-10">
+      <%= f.number_field :quantity, {class: 'form-control'} %>
     </div>
+  </div>
 
-    <div class="form-group row">
-      <%= f.label :photoUri, {class: 'col-2 col-form-label'} %>
-      <div class="col-4" style="position: relative">
-        <% if @inventory_item.photoUri != nil %>
-            <img src="<%= @inventory_item.photoUri %>" style="width:100%; height:auto">
-            <button type="button" style="position: absolute; top: 5px; right: 20px" class="btn btn-sm btn-danger">Remove</button>
-        <% end %>
-        <%= f.file_field :photoUri, :class => 'invisible1' %>
-      </div>
+  <div class="form-group row">
+    <%= f.label :employee_id, {class: 'col-2 col-form-label'} %>
+    <div class="col-10">
+      <%= f.text_field :employeeId, {class: 'form-control'} %>
     </div>
+  </div>
 
-    <div class="form-group row">
-      <%= f.label :signatureUri, {class: 'col-2 col-form-label'} %>
-      <div class="col-4">
-        <% if @inventory_item.signatureUri != nil %>
-            <img src="<%= @inventory_item.signatureUri %>" style="width:100%; height:auto">
-            <button type="button" style="position: absolute; top: 5px; right: 20px" class="btn btn-sm btn-danger">Remove</button>
-        <% end %>
-        <%= f.file_field :signatureUri, :class => 'invisible1'  %>
-      </div>
+  <div class="form-group row">
+    <%= f.label :photo, {class: 'col-2 col-form-label'} %>
+    <div class="col-4" style="position: relative">
+      <% if @inventory_item.photoUri != nil %>
+        <img src="<%= @inventory_item.photoUri %>" style="width:100%; height:auto">
+        <button type="button" style="position: absolute; top: 5px; right: 20px" class="btn btn-sm btn-danger">Remove</button>
+      <% end %>
+      <%= f.file_field :photoUri, :class => 'invisible1' %>
     </div>
+  </div>
 
-    <div class="form-group row">
-      <div class="offset-sm-2 col-sm-10">
-        <%= f.submit :class => 'btn btn-primary' %>
-        <%= link_to 'Cancel', inventory_items_path, {class: "btn btn-secondary"} %>
-      </div>
+  <div class="form-group row">
+    <%= f.label :signature, {class: 'col-2 col-form-label'} %>
+    <div class="col-4">
+      <% if @inventory_item.signatureUri != nil %>
+        <img src="<%= @inventory_item.signatureUri %>" style="width:100%; height:auto">
+        <button type="button" style="position: absolute; top: 5px; right: 20px" class="btn btn-sm btn-danger">Remove</button>
+      <% end %>
+      <%= f.file_field :signatureUri, :class => 'invisible1' %>
     </div>
+  </div>
+
+  <div class="form-group row">
+    <div class="offset-sm-2 col-sm-10">
+      <%= f.submit :class => 'btn btn-primary' %>
+      <%= link_to 'Cancel', inventory_items_path, {class: "btn btn-secondary"} %>
+    </div>
+  </div>
 <% end %>

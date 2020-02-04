@@ -1,37 +1,40 @@
 <%= link_to 'New Item', new_inventory_item_path, {class: 'btn btn-primary my-3'} %>
 
-<div class="container">
-  <div class="card-deck">
-
-    <% count = 1 %>
-    <% @inventory_items.each do |item| %>
-        <% if count == 1 %>
-            <div class="row mb-3">
-        <% end %>
-        <div class="card">
-          <img class="card-img-top" src="<%= item.photoUri %>" alt="<%= item.productName %>" style="width:100%; height:auto">
-          <div class="card-block">
-            <div><h4 class="card-title"><%= item.productName %></h4></div>
-            <h6 class="card-subtitle mb-2 text-muted"><%= item.upc %></h6>
-          </div>
-          <div class="card-footer">
-            <%= link_to 'Show', item, {class: 'btn btn-sm btn-outline-info', style: 'width: 30%'} %>
-            <%= link_to 'Edit', edit_inventory_item_path(item), {class: 'btn btn-sm btn-outline-primary', style: 'width: 30%'} %>
-            <button type="button" class="btn btn-sm btn-outline-danger" data-toggle="modal" data-product-id="<%= item.id %>" data-product-name="<%= item.productName %>" data-target="#deleteItemDialog" style="width: 30%">
-              Delete
-            </button>
-          </div>
-
-        </div>
-        <% if count == 3 %>
-            </div>
-            <% count = 1 %>
-        <% else %>
-            <% count = count + 1 %>
-        <% end %>
-
-    <% end %>
+<% count = 1 %>
+<% @inventory_items.each do |item| %>
+  <% if count == 1 %>
+    <div class="row">
+  <% end %>
+  <div class="col-3 mb-3">
+    <div class="card">
+      <% if item.has_photo? %>
+        <img class="card-img-top" src="<%= item.photoUri %>">
+      <% else %>
+        <img class="card-img-top" src="<%= image_path("no-image.png") %>">
+      <% end %>
+      <div class="card-body">
+        <div><h4 class="card-title"><%= item.productName %></h4></div>
+        <div class="card-text mb-2">User: <%= item.username %></div>
+        <div class="card-text mb-2">UPC: <%= item.upc %></div>
+      </div>
+      <div class="card-footer text-center">
+        <%= link_to 'Show', item, {class: 'btn btn-sm btn-outline-info', style: 'width: 30%'} %>
+        <%= link_to 'Edit', edit_inventory_item_path(item), {class: 'btn btn-sm btn-outline-primary', style: 'width: 30%'} %>
+        <button type="button" class="btn btn-sm btn-outline-danger" data-toggle="modal" data-product-id="<%= item.id %>" data-product-name="<%= item.productName %>" data-target="#deleteItemDialog" style="width: 30%">
+          Delete
+        </button>
+      </div>
+    </div>
   </div>
+
+  <% if count == 4 %>
+    </div>
+    <% count = 1 %>
+  <% else %>
+    <% count = count + 1 %>
+  <% end %>
+
+<% end %>
 </div>
 
 
