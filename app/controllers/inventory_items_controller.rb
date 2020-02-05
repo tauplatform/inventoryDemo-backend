@@ -11,13 +11,21 @@ class InventoryItemsController < ApplicationController
   end
 
   def index
-    # we implement limit and offset
-    username_condition = params['username'] != nil ? {:username => params['username']} : {}
-    if params['offset'] && params['limit']
-      @inventory_items = InventoryItem.where(username_condition).order(:created_at).offset(params['offset'].to_i).limit(params['limit'].to_i)
+    if params['username'] != nil
+      username_condition = params['username'] != nil ? "lower(username) = ?" : {}
+      if params['offset'] && params['limit']
+        @inventory_items = InventoryItem.where(username_condition, params['username'].dowKncase).order(:created_at).offset(params['offset'].to_i).limit(params['limit'].to_i)
+      else
+        @inventory_items = InventoryItem.where(username_condition, params['username'].downcase).order(:id)
+      end
     else
-      @inventory_items = InventoryItem.where(username_condition).order(:id)
+      if params['offset'] && params['limit']
+        @inventory_items = InventoryItem.all().order(:created_at).offset(params['offset'].to_i).limit(params['limit'].to_i)
+      else
+        @inventory_items = InventoryItem.all().order(:created_at)
+      end
     end
+
     respond_to do |format|
       format.html # index.html.erb
       format.json { render :json => @inventory_items }
