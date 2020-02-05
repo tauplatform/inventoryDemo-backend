@@ -13,9 +13,9 @@
         <img class="card-img-top" src="<%= image_path("no-image.png") %>">
       <% end %>
       <div class="card-body">
-        <div><h4 class="card-title"><%= item.productName %></h4></div>
-        <div class="card-text mb-2">User: <%= item.username %></div>
-        <div class="card-text mb-2">UPC: <%= item.upc %></div>
+        <div><h5 class="card-title"><%= item.productName %></h5></div>
+        <div class="card-text">User: <%= item.username %></div>
+        <div class="card-text">UPC: <%= item.upc %></div>
       </div>
       <div class="card-footer text-center">
         <%= link_to 'Show', item, {class: 'btn btn-sm btn-outline-info', style: 'width: 30%'} %>
