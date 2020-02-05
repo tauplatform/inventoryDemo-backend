@@ -1,5 +1,4 @@
 class InventoryItemsController < ApplicationController
-  before_action :set_inventory_item, only: [:show, :edit, :update, :destroy]
   protect_from_forgery unless: -> { request.format.json? }
 
   def initialize
@@ -60,27 +59,18 @@ class InventoryItemsController < ApplicationController
     end
   end
 
-  def create
-    attrs = Hash.new
-    attrs[:productName] = params[:inventory_item]['productName']
-    attrs[:upc] = params[:inventory_item]['upc']
-    attrs[:quantity] = params[:inventory_item]['quantity']
-    attrs[:employeeId] = params[:inventory_item]['employeeId']
-    attrs[:username] = params[:inventory_item]['username']
-
+  def create()
     if params[:inventory_item][:photoUri].class == ActionDispatch::Http::UploadedFile
-      attrs[:photoUri] = uploadFileToS3(params[:inventory_item][:photoUri])
-    elsif params[:inventory_item]['photoUri'] != nil
-      attrs[:photoUri] = params[:inventory_item]['photoUri']
+      params[:inventory_item][:photoUri] = uploadFileToS3(params[:inventory_item][:photoUri])
+    end
+    if params[:inventory_item][:signatureUri].class == ActionDispatch::Http::UploadedFile
+      params[:inventory_item][:signatureUri] = uploadFileToS3(params[:inventory_item][:signatureUri])
     end
 
-    if params[:inventory_item][:signatureUri].class == ActionDispatch::Http::UploadedFile
-      attrs[:signatureUri] = uploadFileToS3(params[:inventory_item][:signatureUri])
-    elsif params[:inventory_item]['signatureUri'] != nil
-      attrs[:signatureUri] = params[:inventory_item]['signatureUri']
-    end
+    attrs = params.require(:inventory_item).permit(:username, :productName, :upc, :quantity, :employeeId, :photoUri, :signatureUri)
 
     @inventory_item = InventoryItem.new(attrs)
+
     respond_to do |format|
       if @inventory_item.save
         flash[:notice] = 'InventoryItem was successfully created.'
@@ -96,25 +86,16 @@ class InventoryItemsController < ApplicationController
   end
 
   def update
-    @inventory_item = InventoryItem.find(params[:id])
-    attrs = Hash.new
-    attrs[:productName] = params[:inventory_item]['productName']
-    attrs[:upc] = params[:inventory_item]['upc']
-    attrs[:quantity] = params[:inventory_item]['quantity']
-    attrs[:employeeId] = params[:inventory_item]['employeeId']
-    attrs[:username] = params[:inventory_item]['username']
-
     if params[:inventory_item][:photoUri].class == ActionDispatch::Http::UploadedFile
-      attrs[:photoUri] = uploadFileToS3(params[:inventory_item][:photoUri])
-    elsif params[:inventory_item]['photoUri'] != nil
-      attrs[:photoUri] = params[:inventory_item]['photoUri']
+      params[:inventory_item][:photoUri] = uploadFileToS3(params[:inventory_item][:photoUri])
+    end
+    if params[:inventory_item][:signatureUri].class == ActionDispatch::Http::UploadedFile
+      params[:inventory_item][:signatureUri] = uploadFileToS3(params[:inventory_item][:signatureUri])
     end
 
-    if params[:inventory_item][:signatureUri].class == ActionDispatch::Http::UploadedFile
-      attrs[:signatureUri] = uploadFileToS3(params[:inventory_item][:signatureUri])
-    elsif params[:inventory_item]['signatureUri'] != nil
-      attrs[:signatureUri] = params[:inventory_item]['signatureUri']
-    end
+    attrs = params.require(:inventory_item).permit(:username, :productName, :upc, :quantity, :employeeId, :photoUri, :signatureUri)
+
+    @inventory_item = InventoryItem.find(params[:id])
     respond_to do |format|
       if @inventory_item.update_attributes(attrs)
         flash[:notice] = 'InventoryItem was successfully updated.'
