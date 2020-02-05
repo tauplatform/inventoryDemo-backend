@@ -14,9 +14,9 @@ class InventoryItemsController < ApplicationController
     # we implement limit and offset
     username_condition = params['username'] != nil ? {:username => params['username']} : {}
     if params['offset'] && params['limit']
-      @inventory_items = InventoryItem.where(username_condition).offset(params['offset'].to_i).limit(params['limit'].to_i)
+      @inventory_items = InventoryItem.where(username_condition).order(:created_at).offset(params['offset'].to_i).limit(params['limit'].to_i)
     else
-      @inventory_items = InventoryItem.where(username_condition)
+      @inventory_items = InventoryItem.where(username_condition).order(:id)
     end
     respond_to do |format|
       format.html # index.html.erb
