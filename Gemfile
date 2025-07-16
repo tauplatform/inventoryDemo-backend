@@ -40,8 +40,8 @@ gem 'jbuilder', '~> 2.5'
 
 gem 'pg'
 gem 'bootstrap', '~> 4.4.1'
-gem 'aws-sdk', '~> 2'
-gem 'aws-sdk-s3', '~> 1.114'
+#gem 'aws-sdk', '~> 2'
+gem 'aws-sdk-s3', '~> 1'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
