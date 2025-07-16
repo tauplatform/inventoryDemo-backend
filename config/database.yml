@@ -1,23 +1,16 @@
-development:
+default: &default
   adapter: postgresql
   encoding: utf8
-  database: inventorydemo_development
-  pool: 5
-  username:
-  password:
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS", 5) %>
 
-test: &TEST
-  adapter: postgresql
-  encoding: utf8
+development:
+  <<: *default
+  database: inventorydemo_development
+
+test:
+  <<: *default
   database: inventorydemo_test
-  pool: 5
-  username:
-  password:
 
 production:
-  adapter: postgresql
-  encoding: utf8
-  database: inventorydemo_production
-  pool: 5
-  username:
-  password:
+  <<: *default
+  url: <%= ENV['DATABASE_URL'] %>
